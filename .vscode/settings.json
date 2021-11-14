@@ -45,6 +45,16 @@
     "memory": "cpp",
     "type_traits": "cpp",
     "xlocnum": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "cmath": "cpp",
+    "functional": "cpp",
+    "map": "cpp",
+    "optional": "cpp",
+    "ostream": "cpp",
+    "set": "cpp",
+    "unordered_map": "cpp",
+    "unordered_set": "cpp",
+    "xmemory": "cpp",
+    "xtr1common": "cpp"
   }
 }

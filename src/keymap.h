@@ -6,7 +6,7 @@
 #include <map>
 #include <optional>
 
-#include "input_action.h"
+#include "cne/input_action.h"
 
 namespace keymap {
 
