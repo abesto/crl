@@ -12,6 +12,7 @@
         "lodepng",
         "MSVC",
         "tcod",
+        "TCODK",
         "vcpkg",
         "vsync",
         "Wextra"
