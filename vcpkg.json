@@ -3,6 +3,7 @@
   "name": "libtcod-template",
   "version-semver": "0.0.0",
   "dependencies": [
+    "entt",
     "glad",
     "lodepng-c",
     "sdl2",
