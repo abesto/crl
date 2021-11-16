@@ -1,6 +1,6 @@
 #include "keymap.h"
 
-namespace keymap {
+namespace context::keymap {
 
 std::optional<const InputAction> Keymap::get_action(const SDL_Keycode& keycode) const {
   auto it = keymap_.find(keycode);
@@ -19,4 +19,4 @@ bool Keymap::is_action(const SDL_Keycode& keycode, const InputAction& action) co
     return opt_action.value() == action;
   }
 }
-}  // namespace keymap
+}  // namespace context::keymap

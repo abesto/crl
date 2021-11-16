@@ -3,7 +3,7 @@
 #include <entt/entt.hpp>
 #include <variant>
 
-#include "../coord.h"
+#include "../components/coord.h"
 
 namespace intent {
 

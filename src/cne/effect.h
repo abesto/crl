@@ -2,7 +2,7 @@
 
 #include <variant>
 
-#include "../coord.h"
+#include "../components/coord.h"
 
 namespace effect {
 struct Moved {

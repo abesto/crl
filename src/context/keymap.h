@@ -6,9 +6,9 @@
 #include <map>
 #include <optional>
 
-#include "cne/input_action.h"
+#include "../cne/input_action.h"
 
-namespace keymap {
+namespace context::keymap {
 
 class Keymap {
  private:
@@ -28,4 +28,4 @@ static const Keymap main{
     {SDLK_DOWN, InputAction::South},
 };
 
-}  // namespace keymap
+}  // namespace context::keymap
