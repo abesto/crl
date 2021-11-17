@@ -12,9 +12,12 @@
 
 #define DISPATCH(system) systems::system::update(registry)
 
+const int WIDTH = 80;
+const int HEIGHT = 25;
+
 int main(int argc, char* argv[]) {
   entt::registry registry;
-  registry.set<tcod::Console>(80, 25);
+  registry.set<tcod::Console>(WIDTH, HEIGHT);
 
   // Configure the context.
   auto params = TCOD_ContextParams{};
@@ -37,6 +40,11 @@ int main(int argc, char* argv[]) {
   registry.set<CauseAndEffect>();
   registry.set<context::keymap::Keymap>(context::keymap::main);
   registry.set<context::state::State>(false);
+  registry.set<context::map::Map>(WIDTH, HEIGHT);
+
+  auto& map = registry.ctx<context::map::Map>();
+  map.at(30, 22) = context::map::WALL;
+  map.at(41, 22) = context::map::WALL;
 
   while (!registry.ctx<const context::state::State&>().quit) {  // Game loop.
     registry.ctx<CauseAndEffect&>().reset();
@@ -46,6 +54,7 @@ int main(int argc, char* argv[]) {
       DISPATCH(handle_input);
       DISPATCH(walk);
       DISPATCH(quit);
+      DISPATCH(debug);
     }
   }
 

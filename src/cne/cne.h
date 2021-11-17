@@ -36,34 +36,22 @@ class Node {
 
 class CauseAndEffect {
  private:
-  std::vector<std::unique_ptr<Node>> nodes = {};
-  std::vector<Node*> roots;
+  std::vector<std::unique_ptr<Node>> nodes_ = {};
+  std::vector<Node*> roots_;
 
-  Node* add_node(Value const& value) {
-    auto node = std::make_unique<Node>(this, value);
-    auto node_ptr = node.get();
-    nodes.push_back(std::move(node));
-    return node_ptr;
-  }
+  Node* add_node(Value const& value);
 
  public:
   CauseAndEffect() = default;
   CauseAndEffect(const CauseAndEffect&) = delete;
   CauseAndEffect& operator=(const CauseAndEffect&) = delete;
 
-  Node const* add_root(Value const& value) {
-    auto node = add_node(value);
-    roots.push_back(node);
-    return node;
-  }
+  size_t size() const { return nodes_.size(); }
+  Node const* add_root(Value const& value);
+  Node const* add_effect(Node* cause, Value const& effect);
+  void reset();
 
-  Node const* add_effect(Node* cause, Value const& effect) {
-    assert(cause != nullptr);
-    assert(cause->belongs_to(this));
-    auto node = add_node(effect);
-    cause->add_effect(node);
-    return node;
-  }
+  Nodes const& roots() const { return roots_; }
 
   // TODO do something about nonstandard extension warnings wherever this is used
   // Could be optimized to return an iterator instead of a vector
@@ -72,7 +60,7 @@ class CauseAndEffect {
     std::vector<Node*> result;
     std::queue<Node*> queue;
 
-    for (auto& root : roots) {
+    for (auto& root : roots_) {
       queue.push(root);
     }
 
@@ -101,13 +89,9 @@ class CauseAndEffect {
       return std::holds_alternative<T>(node->value()) && lambda(std::get<T>(node->value()));
     });
   }
-
-  void reset() {
-    roots.clear();
-    nodes.clear();
-  }
 };
 
 }  // namespace cne
 
 using CauseAndEffect = cne::CauseAndEffect;
+std::ostream& operator<<(std::ostream& os, cne::Value const& value);
