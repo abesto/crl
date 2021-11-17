@@ -28,7 +28,7 @@ void update(entt::registry& registry) {
           vector = Coord{0, 1};
         }
         if (vector) {
-          cne.add_effect(cause, intent::Walk{player, vector.value()});
+          cne.add_effect(cause, intent::Walk{{player}, vector.value()});
         }
 
         // Other input_action -> intent translations will go here

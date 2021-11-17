@@ -53,10 +53,9 @@ class CauseAndEffect {
 
   Nodes const& roots() const { return roots_; }
 
-  // TODO do something about nonstandard extension warnings wherever this is used
   // Could be optimized to return an iterator instead of a vector
   template <typename F>
-  const std::vector<Node*> find(F& lambda) const {
+  const std::vector<Node*> find(F lambda) const {
     std::vector<Node*> result;
     std::queue<Node*> queue;
 
@@ -82,9 +81,8 @@ class CauseAndEffect {
     return find([](auto const* node) { return std::holds_alternative<T>(node->value()); });
   }
 
-  // TODO do something about nonstandard extension warnings wherever this is used
   template <typename T, typename F>
-  const std::vector<Node*> find_by_type(F& lambda) const {
+  const std::vector<Node*> find_by_type(F lambda) const {
     return find([&](auto const* node) {
       return std::holds_alternative<T>(node->value()) && lambda(std::get<T>(node->value()));
     });
