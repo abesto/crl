@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     registry.ctx<CauseAndEffect&>().reset();
     DISPATCH(render);
     DISPATCH(read_input);
-    if (!registry.ctx<const CauseAndEffect&>().find_by_type<SDL_Event>().empty()) {
+    if (!registry.ctx<const CauseAndEffect&>().lookup<SDL_Event>().empty()) {
       DISPATCH(handle_input);
       DISPATCH(walk);
       DISPATCH(quit);

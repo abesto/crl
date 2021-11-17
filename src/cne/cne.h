@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 
 #include <queue>
+#include <tuple>
 #include <variant>
 
 #include "effect.h"
@@ -53,10 +54,10 @@ class CauseAndEffect {
 
   Nodes const& roots() const { return roots_; }
 
-  // Could be optimized to return an iterator instead of a vector
-  template <typename F>
-  const std::vector<Node*> find(F lambda) const {
-    std::vector<Node*> result;
+  // lookup<SDL_Event>() -> vec<(Node, SDL_Event)>
+  template <typename T>
+  const std::vector<std::tuple<Node*, const T*>> lookup() const {
+    std::vector<std::tuple<Node*, const T*>> result;
     std::queue<Node*> queue;
 
     for (auto& root : roots_) {
@@ -66,8 +67,8 @@ class CauseAndEffect {
     while (!queue.empty()) {
       Node* node = queue.front();
       queue.pop();
-      if (lambda(node)) {
-        result.push_back(node);
+      if (const T* p = std::get_if<T>(&node->value())) {
+        result.push_back(std::make_tuple(node, p));
       }
       for (Node* child : node->effects()) {
         queue.push(child);
@@ -76,16 +77,27 @@ class CauseAndEffect {
     return result;
   }
 
-  template <typename T>
-  const std::vector<Node*> find_by_type() const {
-    return find([](auto const* node) { return std::holds_alternative<T>(node->value()); });
-  }
+  // lookup<Intent, Walk>() -> vec<(Node, Walk)>
+  template <typename T0, typename T1>
+  const std::vector<std::tuple<Node*, const T1*>> lookup() const {
+    std::vector<std::tuple<Node*, const T1*>> result;
+    std::queue<Node*> queue;
 
-  template <typename T, typename F>
-  const std::vector<Node*> find_by_type(F lambda) const {
-    return find([&](auto const* node) {
-      return std::holds_alternative<T>(node->value()) && lambda(std::get<T>(node->value()));
-    });
+    for (auto& root : roots_) {
+      queue.push(root);
+    }
+
+    while (!queue.empty()) {
+      Node* node = queue.front();
+      queue.pop();
+      if (const T0* p0 = std::get_if<T0>(&node->value()); const T1* p1 = std::get_if<T1>(p0)) {
+        result.push_back(std::make_tuple(node, p1));
+      }
+      for (Node* child : node->effects()) {
+        queue.push(child);
+      }
+    }
+    return result;
   }
 };
 

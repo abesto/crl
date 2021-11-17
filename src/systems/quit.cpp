@@ -5,19 +5,24 @@
 namespace systems::quit {
 
 void update(entt::registry& registry) {
+  const auto& cne = registry.ctx<CauseAndEffect&>();
   const auto& keymap = registry.ctx<const context::keymap::Keymap&>();
 
-  auto quit_events = registry.ctx<CauseAndEffect&>().find_by_type<SDL_Event>([&](auto const& event) {
-    if (event.type == SDL_QUIT) {
-      return true;
-    }
-    if (event.type == SDL_KEYDOWN && keymap.is_action(event.key.keysym.sym, InputAction::Quit)) {
-      return true;
-    }
-    return false;
-  });
+  bool should_quit = false;
 
-  if (!quit_events.empty()) {
+  for (const auto& [_, event] : cne.lookup<SDL_Event>()) {
+    if (event->type == SDL_QUIT) {
+      should_quit = true;
+      break;
+    }
+
+    if (event->type == SDL_KEYDOWN && keymap.is_action(event->key.keysym.sym, InputAction::Quit)) {
+      should_quit = true;
+      break;
+    }
+  }
+
+  if (should_quit) {
     registry.ctx<context::state::State&>().quit = true;
   }
 }

@@ -5,16 +5,14 @@
 namespace systems::handle_input {
 
 void update(entt::registry& registry) {
-  auto& cne = registry.ctx<CauseAndEffect>();
-  const auto& input_nodes = cne.find_by_type<SDL_Event>();
+  auto& cne = registry.ctx<CauseAndEffect&>();
   const auto& keymap = registry.ctx<const context::keymap::Keymap&>();
 
-  for (auto&& cause : input_nodes) {
-    auto event = std::get<SDL_Event>(cause->value());
-    if (event.type != SDL_KEYDOWN) {
+  for (auto& [cause, event] : cne.lookup<SDL_Event>()) {
+    if (event->type != SDL_KEYDOWN) {
       continue;
     }
-    if (auto input_action = keymap.get_action(event.key.keysym.sym); input_action) {
+    if (auto input_action = keymap.get_action(event->key.keysym.sym); input_action) {
       for (auto&& [player] : registry.view<Player>().each()) {
         // Walk
         std::optional<Coord> vector;
